@@ -1,24 +1,23 @@
 package src.models;
 
 public class Projeto {
-    private int registro;
+    private int id;
     private String nome;
     private String descricao;
     private Usuario proprietario;
 
-    public Projeto(int registro, String nome, String descricao, Usuario proprietario) {
-        this.registro = registro;
+
+    public Projeto(String nome, String descricao, Usuario proprietario) {
         this.nome = nome;
         this.descricao = descricao;
         this.proprietario = proprietario;
     }
 
-    public int getRegistro() {
-        return registro;
-    }
-
-    public void setRegistro(int registro) {
-        this.registro = registro;
+    public Projeto(int registro, String nome, String descricao, Usuario proprietario) {
+        this.id = registro;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.proprietario = proprietario;
     }
 
     public String getNome() {
@@ -43,5 +42,13 @@ public class Projeto {
 
     public void setProprietario(Usuario proprietario) {
         this.proprietario = proprietario;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

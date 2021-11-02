@@ -10,26 +10,28 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class ProjetoHelper {
-    //Mostrar tudo---Pegando do banco de dados
+
     public static ArrayList<Projeto> listar() {
         ArrayList<Projeto> projetos = new ArrayList<>();
-        //try with resources
-        try (
-                PreparedStatement ps = ConexaoBD.getConnection().prepareStatement("SELECT * FROM Projeto, Usuario WHERE Usuario.nome_de_usuario = usuario_proprietario;");
-                ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
 
-                int registro = rs.getInt("registro_do_projeto");
+        try (
+                PreparedStatement ps = ConexaoBD.getConnection().prepareStatement("SELECT * FROM Projeto, Usuario WHERE Usuario.idUsuario = Projeto.idUsuario;");
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int idUsuario = rs.getInt("idUsuario");
+                int idProjeto = rs.getInt("idProjeto");
                 String nomeProjeto = rs.getString("nome_do_projeto");
                 String descricao = rs.getString("descricao");
-                String nomeProprietario = rs.getString("usuario_proprietario");
+                String nomeDeUsuario = rs.getString("nome_de_usuario");
                 String nomeCompleto = rs.getString("nome_completo");
                 String email = rs.getString("email");
                 String senha = rs.getString("senha");
                 String telefone = rs.getString("telefone");
-                Usuario usuario = new Usuario(nomeCompleto, nomeProprietario, email, senha, telefone);
 
-                Projeto projeto = new Projeto(registro, nomeProjeto, descricao, usuario);
+                Usuario usuario = new Usuario(idUsuario, nomeCompleto, nomeDeUsuario, email, senha, telefone);
+
+                Projeto projeto = new Projeto(idProjeto, nomeProjeto, descricao, usuario);
                 projetos.add(projeto);
             }
             return projetos;
@@ -39,19 +41,15 @@ public class ProjetoHelper {
         }
 
     }
-    //Excluir
 
-    public static void apagar(int registro) {
-        //1: Definir o comando SQL
-        String sql = "DELETE FROM Projeto WHERE registro_do_projeto= ?";
-        //2: Abrir uma conexão
+    public static void apagar(int idProjeto) {
+        String sql = "DELETE FROM Projeto WHERE idProjeto = ?";
 
         try (Connection c = ConexaoBD.getConnection()) {
-            //3: Pré compila o comando
             PreparedStatement ps = c.prepareStatement(sql);
-            //4: Preenche os dados faltantes
-            ps.setInt(1, registro);
-            //5: Executa o comando
+
+            ps.setInt(1, idProjeto);
+
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,38 +57,32 @@ public class ProjetoHelper {
     }
 
 
-    //Atualizar
     public static void atualizar(Projeto projeto) {
-        //1: Definir o comando SQL
-        String sql = "UPDATE Projeto SET registro_do_projeto = ?, nome_do_projeto = ?, descricao = ?, usuario_proprietario = ?";
+        String sql = "UPDATE Projeto SET nome_do_projeto = ?, descricao = ?, idUsuario = ?";
+
         try (Connection c = ConexaoBD.getConnection()) {
-            //3: Pré compila o comando
             PreparedStatement ps = c.prepareStatement(sql);
-            //4: Preenche os dados faltantes
-            ps.setInt(1, projeto.getRegistro());
-            ps.setString(2, projeto.getNome());
-            ps.setString(3, projeto.getDescricao());
-            ps.setObject(4, projeto.getProprietario());
-            //5: Executa o comando
+
+            ps.setString(1, projeto.getNome());
+            ps.setString(2, projeto.getDescricao());
+            ps.setInt(3, projeto.getProprietario().getId());
+
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    ///Adicionar usuario ao banco de dados:
-    public static void adicionar(Projeto projeto) {
-        //1: Definir o comando SQL
-        String sql = "INSERT INTO Projeto(registro_do_projeto, nome_do_projeto, descricao, usuario_proprietario) VALUES (?, ?, ?, ?)";
+    public static void adicionar(String nomeDoProjeto, String descricaoDoProjeto, int idUsuario) {
+        String sql = "INSERT INTO Projeto(nome_do_projeto, descricao, idUsuario) VALUES (?, ?, ?)";
+
         try (Connection c = ConexaoBD.getConnection()) {
-            //3: Pré compila o comando
             PreparedStatement ps = c.prepareStatement(sql);
-            //4: Preenche os dados faltantes
-            ps.setInt(1, projeto.getRegistro());
-            ps.setString(2, projeto.getNome());
-            ps.setString(3, projeto.getDescricao());
-            ps.setObject(4, projeto.getProprietario());
-            //5: Executa o comando
+
+            ps.setString(1, nomeDoProjeto);
+            ps.setString(2, descricaoDoProjeto);
+            ps.setInt(3, idUsuario);
+
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();

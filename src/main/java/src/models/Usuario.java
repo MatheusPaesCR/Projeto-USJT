@@ -1,6 +1,7 @@
 package src.models;
 
 public class Usuario {   //Variaveis
+    private int id;
     private String nomeDeUsuario;
     private String nomeCompleto;
     private String email;
@@ -8,6 +9,15 @@ public class Usuario {   //Variaveis
     private String telefone;
 
     //metodo construtor
+    public Usuario(int id, String nomeCompleto, String nomeDeUsuario, String email, String senha, String tel) {
+        this.id = id;
+        this.nomeCompleto = nomeCompleto;
+        this.nomeDeUsuario = nomeDeUsuario;
+        this.email = email;
+        this.senha = senha;
+        this.telefone = tel;
+    }
+
     public Usuario(String nomeCompleto, String nomeDeUsuario, String email, String senha, String tel) {
         this.nomeCompleto = nomeCompleto;
         this.nomeDeUsuario = nomeDeUsuario;
@@ -62,5 +72,13 @@ public class Usuario {   //Variaveis
 
     public String getTelefone() {
         return telefone;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

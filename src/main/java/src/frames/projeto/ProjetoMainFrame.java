@@ -11,17 +11,20 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class ProjetoMainFrame extends JFrame {
-    DefaultTableModel modeloTabela;
-    JButton btnAdicionar;
-    JButton btnEditar;
-    JButton btnExcluir;
-    JPanel root;
+    private JTable tabelaProjetos;
+    private JButton btnAdicionar;
+    private JButton btnEditar;
+    private JButton btnExcluir;
+    private JPanel root;
+    private final GridBagConstraints c = new GridBagConstraints();
 
     public ProjetoMainFrame() {
-        super("Editar Projetos");
+        super("Dados dos Projetos");
         setLayout(new BorderLayout());
 
         montarRoot();
+        montarBotoes();
+        adicionarAcaoBotoes();
         montarTabela();
 
         add(root);
@@ -35,13 +38,8 @@ public class ProjetoMainFrame extends JFrame {
     }
 
     private void montarTabela() {
-        criarTituloDasColunasDaTabela();
-        JTable tabela = criarTabela();
-
-        GridBagConstraints c = new GridBagConstraints();
-
-        montarBotoes(c);
-        adicionarAcaoBotoes();
+        DefaultTableModel modeloDeTabela = criarTituloDasColunasDaTabela();
+        criarTabela(modeloDeTabela);
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.insets = new Insets(10,20,0,20);
@@ -53,12 +51,37 @@ public class ProjetoMainFrame extends JFrame {
         JPanel painelDaTabela = new JPanel(new BorderLayout());
         final JTextField filterText = new JTextField("Digite aqui para pesquisar...");
         painelDaTabela.add(filterText, BorderLayout.NORTH);
-        painelDaTabela.add(new JScrollPane(tabela), BorderLayout.CENTER);
+        painelDaTabela.add(new JScrollPane(tabelaProjetos), BorderLayout.CENTER);
 
         root.add(painelDaTabela, c);
     }
 
-    private void montarBotoes(GridBagConstraints c) {
+
+    private DefaultTableModel criarTituloDasColunasDaTabela() {
+        Object[] columns = {"Identificador do Projeto", "Nome do Projeto", "Descrição", "Nome do Proprietário", "Email do Proprietário"};
+        return new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    private void criarTabela(DefaultTableModel modeloDeTabela) {
+        ArrayList<Projeto> projetos = ProjetoHelper.listar();
+
+        if (projetos != null) {
+            for (Projeto projeto : projetos) {
+                Object[] row1 = {projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
+                modeloDeTabela.insertRow(0, row1);
+            }
+        }
+
+        tabelaProjetos = new JTable(modeloDeTabela);
+        tabelaProjetos.setRowSorter(new TableRowSorter<TableModel>(modeloDeTabela));
+    }
+
+    private void montarBotoes() {
         btnAdicionar = new JButton("Adicionar");
         c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.NORTH;
@@ -85,31 +108,51 @@ public class ProjetoMainFrame extends JFrame {
     }
 
     private void adicionarAcaoBotoes() {
-        btnAdicionar.addActionListener(actionEvent -> {
-            AdicionarProjetoFrame.abrir();
-        });
+        btnAdicionar.addActionListener(actionEvent -> AdicionarProjetoFrame.abrir(this::atualizarTabela));
+        btnExcluir.addActionListener(actionEvent -> excluirProjeto());
     }
 
-    private void criarTituloDasColunasDaTabela() {
-        Object[] columns = {"Registro do Projeto", "Nome do Projeto", "Descrição", "Nome do Proprietário", "Email do Proprietário"};
-        modeloTabela = new DefaultTableModel(columns, 5);
-    }
+    private void atualizarTabela() {
+        DefaultTableModel modeloTabela = ((DefaultTableModel) tabelaProjetos.getModel());
+        modeloTabela.getDataVector().removeAllElements();
+        modeloTabela.fireTableDataChanged();
 
-    private JTable criarTabela() {
         ArrayList<Projeto> projetos = ProjetoHelper.listar();
 
         if (projetos != null) {
             for (Projeto projeto : projetos) {
-
-                Object[] row1 = {projeto.getRegistro(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
+                Object[] row1 = {projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
                 modeloTabela.insertRow(0, row1);
             }
         }
-
-        JTable tabela = new JTable(modeloTabela);
-        tabela.setRowSorter(new TableRowSorter<TableModel>(modeloTabela));
-        return tabela;
     }
+
+    private void excluirProjeto() {
+        int idProjeto = pegarIdProjeto();
+        if (idProjeto == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione um projeto primeiro");
+            return;
+        }
+
+        int confirmado = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir esse projeto?", "Excluir", JOptionPane.YES_NO_OPTION);
+
+        if (confirmado == 0){
+            ProjetoHelper.apagar(idProjeto);
+            atualizarTabela();
+            JOptionPane.showMessageDialog(null, "Projeto excluído!!!");
+        }
+    }
+
+    private int pegarIdProjeto(){
+        int column = 0;
+        int row = tabelaProjetos.getSelectedRow();
+        if (row == -1){
+            return -1;
+        } else {
+            return Integer.parseInt(tabelaProjetos.getModel().getValueAt(row, column).toString());
+        }
+    }
+
 
     /**
      * Métodos para abrir a tela

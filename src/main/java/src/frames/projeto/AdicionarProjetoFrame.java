@@ -1,16 +1,25 @@
 package src.frames.projeto;
 
+import src.db.helper.ProjetoHelper;
+import src.db.helper.UsuarioHelper;
+import src.models.Projeto;
+import src.models.Usuario;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class AdicionarProjetoFrame extends JFrame {
     private JPanel root;
     private JTextField descricaoProjetoField;
     private JTextField nomeProjetoField;
-    private JTextField emailField;
-    private JTextField senhaField;
-    private JTextField confirmarSenhaField;
-    private JTextField telefoneField;
+    private JTable tabelaDeUsuarios;
+    private JButton btnCriar;
+    private CallbackAdicionarProjeto callback;
+    private final GridBagConstraints c = new GridBagConstraints();
 
     public AdicionarProjetoFrame() {
         super("Adicionar Projeto");
@@ -18,77 +27,165 @@ public class AdicionarProjetoFrame extends JFrame {
 
         montarRoot();
         montarFormulario();
+        montarTabela();
         montarBotoes();
+        adicionarAcaoBotoes();
 
         add(root);
     }
 
     private void montarRoot() {
+        setTitle("Adicionar Projeto");
+
         root = new JPanel(new GridBagLayout());
     }
 
     private void montarFormulario() {
-        GridBagConstraints c = new GridBagConstraints();
-
         JLabel nomeProjetoLabel = new JLabel("Nome do Projeto:");
         nomeProjetoLabel.setFont(new Font("Verdana", Font.PLAIN, 18));
         nomeProjetoField = new JTextField(20);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(10, 20, 0, 20);
+        c.weightx = 0.5;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weighty = 3;
+        root.add(nomeProjetoLabel, c);
+        c.gridx = 1;
+        c.weightx = 2.5;
+        root.add(nomeProjetoField, c);
 
         JLabel descricaoProjetoLabel = new JLabel("Descrição do Projeto:");
         descricaoProjetoLabel.setFont(new Font("Verdana", Font.PLAIN, 18));
         descricaoProjetoField = new JTextField(40);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(10, 20, 0, 20);
+        c.weightx = 0.5;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weighty = 3;
+        root.add(descricaoProjetoLabel, c);
+        c.gridx = 1;
+        c.weightx = 2.5;
+        root.add(descricaoProjetoField, c);
+    }
 
-        root.add(nomeProjetoLabel);
-        root.add(nomeProjetoField);
-        root.add(descricaoProjetoLabel);
-        root.add(descricaoProjetoField);
+    private void montarTabela() {
+        DefaultTableModel modeloDeTabela = criarTituloDasColunasDaTabela();
+        criarTabela(modeloDeTabela);
 
-        //---------BOTOES---------
-        JPanel painelBotoes = new JPanel();  //criando o painel para os botoes
-        painelBotoes.setLayout(new FlowLayout());
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(10, 20, 0, 20);
+        c.ipady = 40;
+        c.weightx = 0.0;
+        c.weighty = 40;
+        c.gridwidth = 3;
+        c.gridx = 0;
+        c.gridy = 2;
+        JPanel painelDaTabela = new JPanel(new BorderLayout());
+        painelDaTabela.add(new JScrollPane(tabelaDeUsuarios), BorderLayout.CENTER);
 
+        root.add(painelDaTabela, c);
+    }
 
-//        EditarUsuario.BotaoSalvarAction botaoSalvarAction = new EditarUsuario.BotaoSalvarAction();
-//        EditarUsuario.BotaoApagarAction botaoApagarAction = new EditarUsuario.BotaoApagarAction();
-//        EditarUsuario.BotaoFecharAction botaoFecharAction = new EditarUsuario.BotaoFecharAction();
-//
-//        JButton botaoSalvar = new JButton("Salvar");
-//        botaoSalvar.addActionListener(botaoSalvarAction);//ação
-//        JButton botaoApagar = new JButton("Limpar");
-//        botaoApagar.addActionListener(botaoApagarAction);//ação
-//
-//
-//        painelBotoes.add(botaoSalvar);
-//        painelBotoes.add(botaoApagar);
+    private DefaultTableModel criarTituloDasColunasDaTabela() {
+        Object[] columns = {"Usuário", "Nome Completo", "Email"};
+        return new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
 
-//        JPanel painelUsuario = new JPanel();
-//            painelUsuario.setLayout(new GridLayout(3, 1));
-//        painelUsuario.add(painelAdicionarUsuario);
-//        painelUsuario.add(painelPrincipal);
-//        painelUsuario.add(painelBotoes, BorderLayout.SOUTH);
+    private void criarTabela(DefaultTableModel modeloDeTabela) {
+        ArrayList<Usuario> usuarios = UsuarioHelper.listar();
+
+        if (usuarios != null) {
+            for (Usuario usuario : usuarios) {
+                Object[] row1 = {usuario.getNomeDeUsuario(), usuario.getNomeCompleto(), usuario.getEmail()};
+                modeloDeTabela.insertRow(0, row1);
+            }
+        }
+
+        tabelaDeUsuarios = new JTable(modeloDeTabela);
+        tabelaDeUsuarios.setRowSorter(new TableRowSorter<TableModel>(modeloDeTabela));
     }
 
     private void montarBotoes() {
+        btnCriar = new JButton("Criar");
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.NORTH;
+        c.weightx = 0.5;
+        c.gridx = 0;
+        c.gridy = 3;
+        root.add(btnCriar, c);
+    }
 
+    private void adicionarAcaoBotoes() {
+        btnCriar.addActionListener(actionEvent -> {
+            if (criarProjeto()){
+                JOptionPane.showMessageDialog(null, "Projeto criado com sucesso!!!");
+                fechar();
+            }
+        });
+    }
+
+    private Boolean criarProjeto(){
+        String nomeUsuario = pegarNomeDeUsuarioProprietarioProjeto();
+        String nomeDoProjeto = nomeProjetoField.getText();
+        String descricaoDoProjeto = descricaoProjetoField.getText();
+
+        if (nomeDoProjeto.equals("")) {
+            JOptionPane.showMessageDialog(null, "Digite um nome para o projeto");
+            return false;
+        }
+
+        if (descricaoDoProjeto.equals("")) {
+            JOptionPane.showMessageDialog(null, "Digite uma descrição para o projeto");
+            return false;
+        }
+
+        if (nomeUsuario.equals("")) {
+            JOptionPane.showMessageDialog(null, "Selecione um proprietário para o projeto");
+            return false;
+        }
+
+        Usuario usuario = UsuarioHelper.pegar(nomeUsuario);
+        if (usuario != null) { ProjetoHelper.adicionar(nomeDoProjeto, descricaoDoProjeto, usuario.getId()); }
+        return true;
+    }
+
+    private String pegarNomeDeUsuarioProprietarioProjeto(){
+        int column = 0;
+        int row = tabelaDeUsuarios.getSelectedRow();
+        if (row == -1){
+            return "";
+        } else {
+            return tabelaDeUsuarios.getModel().getValueAt(row, column).toString();
+        }
     }
 
     /**
      * Métodos para abrir a tela
      */
-    private static ProjetoMainFrame projetoMainFrame;
+    private static AdicionarProjetoFrame adicionarProjetoFrame;
 
-    private static ProjetoMainFrame getInstance() {
-        if (projetoMainFrame == null) {
-            projetoMainFrame = new ProjetoMainFrame();
+    private static AdicionarProjetoFrame getInstance() {
+        if (adicionarProjetoFrame == null) {
+            adicionarProjetoFrame = new AdicionarProjetoFrame();
         }
-        return projetoMainFrame;
+        return adicionarProjetoFrame;
     }
 
     public static void fechar() {
         getInstance().setVisible(false);
+        getInstance().dispose();
+        getInstance().callback.invoke();
     }
 
-    public static void abrir() {
+    public static void abrir(CallbackAdicionarProjeto callback) {
+        getInstance().callback = callback;
         getInstance().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getInstance().setSize(1080, 720);
         getInstance().setVisible(true);
