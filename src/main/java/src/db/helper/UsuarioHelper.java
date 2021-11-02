@@ -15,7 +15,7 @@ public class UsuarioHelper {
         ArrayList<Usuario> usuarios = new ArrayList<>();
         //try with resources
         try (
-                PreparedStatement ps = ConexaoBD.getConnection().prepareStatement("SELECT * FROM Usuario;");
+                PreparedStatement ps = ConexaoBD.getConnection().prepareStatement("SELECT * FROM USUARIO;");
                 ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
 

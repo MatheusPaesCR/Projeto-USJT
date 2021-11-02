@@ -22,18 +22,15 @@ public class Principal {
 
     public static void main(String[] args) {
         //Inerface do acesso usuario e senha
-//        criarAcesso(0);
-        ProjetoMainFrame.abrir();
+        criarAcesso(0);
         //interface da tela gerenciador do departamento é criada depois de fazer login e o login ser validado
-        //criarDepartamento();   
-
+//        criarDepartamento();
     }
 
     //Inerface do acesso usuario e senha
     public static void criarAcesso(int x) {    //Para abrir e 0 para fechar
         int status = 3;
         status = x;
-
 
         if (status == 0) {
 

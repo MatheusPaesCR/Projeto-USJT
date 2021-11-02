@@ -26,22 +26,26 @@ CREATE TABLE PROJETO
   FOREIGN KEY (idUsuario) REFERENCES USUARIO(idUsuario)
 );
 
-CREATE TABLE REQUISITOS
+CREATE TABLE REQUISITO
 (
    idRequisito INT NOT NULL AUTO_INCREMENT,
    nome VARCHAR(50),
    modulo INT,
    funcionalidades TEXT NOT NULL,
    data_de_criacao DATE,
-   autor VARCHAR(50),
    data_da_ultima_alteracao DATE,
-   autor_da_ultima_modificacao VARCHAR(50) NOT NULL,
-   versao  INT,
+   versao INT,
    prioridade TEXT,
    complexidade TEXT,
    esforco_horas TIME, ##esforço estimado em horas
    estado TEXT, #,"Finalizado","Concluido","Circuito com sensor de luz,relé, placa arduino e resistores"
    fase TEXT, ## inicial,em andamento, final, concluido
    descricao TEXT,
-   PRIMARY KEY (idRequisito)
+   idProjeto INT NOT NULL,
+   idAutor INT NOT NULL,
+   idAutorUltimaModificacao INT NOT NULL,
+   PRIMARY KEY (idRequisito),
+   FOREIGN KEY (idProjeto) REFERENCES PROJETO(idProjeto),
+   FOREIGN KEY (idAutor) REFERENCES USUARIO(idUsuario),
+   FOREIGN KEY (idAutorUltimaModificacao) REFERENCES USUARIO(idUsuario)
 );

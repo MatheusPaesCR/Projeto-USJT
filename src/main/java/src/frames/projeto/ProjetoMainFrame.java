@@ -15,6 +15,7 @@ public class ProjetoMainFrame extends JFrame {
     private JButton btnAdicionar;
     private JButton btnEditar;
     private JButton btnExcluir;
+    private JButton btnMostrarRequisitos;
     private JPanel root;
     private final GridBagConstraints c = new GridBagConstraints();
 
@@ -45,7 +46,7 @@ public class ProjetoMainFrame extends JFrame {
         c.insets = new Insets(10,20,0,20);
         c.ipady = 40;
         c.weightx = 0.0;
-        c.gridwidth = 3;
+        c.gridwidth = 4;
         c.gridx = 0;
         c.gridy = 1;
         JPanel painelDaTabela = new JPanel(new BorderLayout());
@@ -58,12 +59,13 @@ public class ProjetoMainFrame extends JFrame {
 
 
     private DefaultTableModel criarTituloDasColunasDaTabela() {
-        Object[] columns = {"Identificador do Projeto", "Nome do Projeto", "Descrição", "Nome do Proprietário", "Email do Proprietário"};
+        Object[] columns = {"ID", "Título", "Descrição", "Usuário Proprietário", "Email do Proprietário"};
         return new DefaultTableModel(columns, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
+
         };
     }
 
@@ -78,7 +80,11 @@ public class ProjetoMainFrame extends JFrame {
         }
 
         tabelaProjetos = new JTable(modeloDeTabela);
+        tabelaProjetos.getTableHeader().setFont(new Font("Verdana", Font.BOLD, 13));
         tabelaProjetos.setRowSorter(new TableRowSorter<TableModel>(modeloDeTabela));
+        tabelaProjetos.setRowHeight(20);
+        tabelaProjetos.setFont(new Font("Verdana", Font.PLAIN, 12));
+        tabelaProjetos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     private void montarBotoes() {
@@ -105,11 +111,21 @@ public class ProjetoMainFrame extends JFrame {
         c.gridx = 2;
         c.gridy = 0;
         root.add(btnExcluir, c);
+
+        btnMostrarRequisitos = new JButton("Mostrar Requisitos");
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.PAGE_END;
+        c.weightx = 0.5;
+        c.gridx = 3;
+        c.gridy = 0;
+        root.add(btnMostrarRequisitos, c);
     }
 
     private void adicionarAcaoBotoes() {
         btnAdicionar.addActionListener(actionEvent -> AdicionarProjetoFrame.abrir(this::atualizarTabela));
+        btnEditar.addActionListener(actionEvent -> editarProjeto());
         btnExcluir.addActionListener(actionEvent -> excluirProjeto());
+        btnMostrarRequisitos.addActionListener(actionEvent -> mostrarRequisitos());
     }
 
     private void atualizarTabela() {
@@ -143,13 +159,35 @@ public class ProjetoMainFrame extends JFrame {
         }
     }
 
+    private void mostrarRequisitos(){
+        int idProjeto = pegarIdProjeto();
+        if (idProjeto == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione um projeto primeiro");
+            return;
+        }
+
+        ProjetoListarRequisitosFrame.abrir(idProjeto);
+    }
+
+    private void editarProjeto() {
+        int idProjeto = pegarIdProjeto();
+        if (idProjeto == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione um projeto primeiro");
+            return;
+        }
+
+        AdicionarProjetoFrame.abrirParaEdicao(idProjeto, this::atualizarTabela);
+    }
+
     private int pegarIdProjeto(){
         int column = 0;
         int row = tabelaProjetos.getSelectedRow();
         if (row == -1){
             return -1;
         } else {
-            return Integer.parseInt(tabelaProjetos.getModel().getValueAt(row, column).toString());
+            // Evita pegar a linha errada quando o usuário ordena a coluna
+            int realRow = tabelaProjetos.convertRowIndexToModel(row);
+            return Integer.parseInt(tabelaProjetos.getModel().getValueAt(realRow, column).toString());
         }
     }
 
@@ -168,6 +206,7 @@ public class ProjetoMainFrame extends JFrame {
 
     public static void fechar() {
         getInstance().setVisible(false);
+        projetoMainFrame = null;
     }
 
     public static void abrir() {

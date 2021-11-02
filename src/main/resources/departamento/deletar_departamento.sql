@@ -1,7 +1,7 @@
 ## Deletar tabela:
 DROP TABLE USUARIO;
 DROP TABLE PROJETO;
-DROP TABLE REQUISITOS;
+DROP TABLE REQUISITO;
 
 ## Excluir o banco de dados:
 DROP DATABASE departamento;
