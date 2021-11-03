@@ -36,10 +36,10 @@ public class RequisitoHelper {
                 Requisito.Estado estado = Requisito.Estado.valueOf(rs.getString("estado"));
                 Requisito.Fase fase = Requisito.Fase.valueOf(rs.getString("fase"));
                 String descricao = rs.getString("descricao");
-                int idAutor = rs.getInt("idAutor");
-                int idAutorUltimaModificacao = rs.getInt("idAutorUltimaModificacao");
+                String autor = rs.getString("autor");
+                String autorUltimaModificacao = rs.getString("autorUltimaModificacao");
 
-                requisitos.add(new Requisito(idRequisito, nome, modulo, funcionalidades, data_de_criacao, data_da_ultima_alteracao, versao, prioridade, complexidade, esforco_horas, estado, fase, descricao, idProjeto, idAutor, idAutorUltimaModificacao));
+                requisitos.add(new Requisito(idRequisito, nome, modulo, funcionalidades, data_de_criacao, data_da_ultima_alteracao, versao, prioridade, complexidade, esforco_horas, estado, fase, descricao, idProjeto, autor, autorUltimaModificacao));
             }
             return requisitos;
         } catch (Exception e) {

@@ -17,10 +17,10 @@ public class Requisito {
     private Fase fase;
     private String descricao;
     private int idProjeto;
-    private int idAutor;
-    private int idAutorUltimaAlteracao;
+    private String autor;
+    private String autorUltimaAlteracao;
 
-    public Requisito(int id, String nome, int modulo, String funcionalidades, Date dataCriacao, Date dataUltimaAlteracao, int versao, Prioridade prioridade, Complexidade complexidade, int esforcoHoras, Estado estado, Fase fase, String descricao, int idProjeto, int idAutor, int idAutorUltimaAlteracao) {
+    public Requisito(int id, String nome, int modulo, String funcionalidades, Date dataCriacao, Date dataUltimaAlteracao, int versao, Prioridade prioridade, Complexidade complexidade, int esforcoHoras, Estado estado, Fase fase, String descricao, int idProjeto, String autor, String autorUltimaAlteracao) {
         this.id = id;
         this.nome = nome;
         this.modulo = modulo;
@@ -35,8 +35,8 @@ public class Requisito {
         this.fase = fase;
         this.descricao = descricao;
         this.idProjeto = idProjeto;
-        this.idAutor = idAutor;
-        this.idAutorUltimaAlteracao = idAutorUltimaAlteracao;
+        this.autor = autor;
+        this.autorUltimaAlteracao = autorUltimaAlteracao;
     }
 
     public int getId() {
@@ -143,28 +143,28 @@ public class Requisito {
         this.descricao = descricao;
     }
 
-    public int getIdAutorUltimaAlteracao() {
-        return idAutorUltimaAlteracao;
-    }
-
-    public void setIdAutorUltimaAlteracao(int idAutorUltimaAlteracao) {
-        this.idAutorUltimaAlteracao = idAutorUltimaAlteracao;
-    }
-
-    public int getIdAutor() {
-        return idAutor;
-    }
-
-    public void setIdAutor(int idAutor) {
-        this.idAutor = idAutor;
-    }
-
     public int getIdProjeto() {
         return idProjeto;
     }
 
     public void setIdProjeto(int idProjeto) {
         this.idProjeto = idProjeto;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public String getAutorUltimaAlteracao() {
+        return autorUltimaAlteracao;
+    }
+
+    public void setAutorUltimaAlteracao(String autorUltimaAlteracao) {
+        this.autorUltimaAlteracao = autorUltimaAlteracao;
     }
 
     public enum Prioridade {

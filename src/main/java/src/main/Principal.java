@@ -43,8 +43,6 @@ public class Principal {
         if (status == 1) {
             acessoFrame.setVisible(false);
         }
-
-
     }
 
     //Gerenciar editarUsuario

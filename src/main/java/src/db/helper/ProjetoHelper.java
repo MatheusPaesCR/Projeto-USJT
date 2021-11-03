@@ -15,11 +15,10 @@ public class ProjetoHelper {
         ArrayList<Projeto> projetos = new ArrayList<>();
 
         try (
-                PreparedStatement ps = ConexaoBD.getConnection().prepareStatement("SELECT * FROM PROJETO, USUARIO WHERE USUARIO.idUsuario = PROJETO.idUsuario;");
+                PreparedStatement ps = ConexaoBD.getConnection().prepareStatement("SELECT * FROM PROJETO, USUARIO WHERE Usuario.nome_de_usuario = Projeto.proprietario;");
                 ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                int idUsuario = rs.getInt("idUsuario");
                 int idProjeto = rs.getInt("idProjeto");
                 String nomeProjeto = rs.getString("nome_do_projeto");
                 String descricao = rs.getString("descricao");
@@ -29,7 +28,7 @@ public class ProjetoHelper {
                 String senha = rs.getString("senha");
                 String telefone = rs.getString("telefone");
 
-                Usuario usuario = new Usuario(idUsuario, nomeCompleto, nomeDeUsuario, email, senha, telefone);
+                Usuario usuario = new Usuario(nomeCompleto, nomeDeUsuario, email, senha, telefone);
 
                 Projeto projeto = new Projeto(idProjeto, nomeProjeto, descricao, usuario);
                 projetos.add(projeto);
@@ -43,7 +42,7 @@ public class ProjetoHelper {
     }
 
     public static Projeto pegar(int idProjeto) {
-        String sql = "SELECT * FROM PROJETO, USUARIO WHERE idProjeto = ? AND Usuario.idUsuario = Projeto.idUsuario;";
+        String sql = "SELECT * FROM PROJETO, USUARIO WHERE idProjeto = ? AND Usuario.nome_de_usuario = Projeto.proprietario;";
 
         try (Connection c = ConexaoBD.getConnection()) {
             PreparedStatement ps = c.prepareStatement(sql);
@@ -51,7 +50,6 @@ public class ProjetoHelper {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                int idUsuario = rs.getInt("idUsuario");
                 String nomeProjeto = rs.getString("nome_do_projeto");
                 String descricao = rs.getString("descricao");
                 String nomeDeUsuario = rs.getString("nome_de_usuario");
@@ -60,7 +58,7 @@ public class ProjetoHelper {
                 String senha = rs.getString("senha");
                 String telefone = rs.getString("telefone");
 
-                Usuario usuario = new Usuario(idUsuario, nomeCompleto, nomeDeUsuario, email, senha, telefone);
+                Usuario usuario = new Usuario(nomeCompleto, nomeDeUsuario, email, senha, telefone);
 
                 return new Projeto(idProjeto, nomeProjeto, descricao, usuario);
             } else return null;
@@ -86,14 +84,14 @@ public class ProjetoHelper {
 
 
     public static void atualizar(Projeto projeto) {
-        String sql = "UPDATE Projeto SET nome_do_projeto = ?, descricao = ?, idUsuario = ? WHERE idProjeto = ?";
+        String sql = "UPDATE Projeto SET nome_do_projeto = ?, descricao = ?, proprietario = ? WHERE idProjeto = ?";
 
         try (Connection c = ConexaoBD.getConnection()) {
             PreparedStatement ps = c.prepareStatement(sql);
 
             ps.setString(1, projeto.getNome());
             ps.setString(2, projeto.getDescricao());
-            ps.setInt(3, projeto.getProprietario().getId());
+            ps.setString(3, projeto.getProprietario().getNomeDeUsuario());
             ps.setInt(4, projeto.getId());
 
             ps.execute();
@@ -102,20 +100,19 @@ public class ProjetoHelper {
         }
     }
 
-    public static void adicionar(String nomeDoProjeto, String descricaoDoProjeto, int idUsuario) {
-        String sql = "INSERT INTO PROJETO(nome_do_projeto, descricao, idUsuario) VALUES (?, ?, ?)";
+    public static void adicionar(String nomeDoProjeto, String descricaoDoProjeto, String proprietario) {
+        String sql = "INSERT INTO PROJETO(nome_do_projeto, descricao, proprietario) VALUES (?, ?, ?)";
 
         try (Connection c = ConexaoBD.getConnection()) {
             PreparedStatement ps = c.prepareStatement(sql);
 
             ps.setString(1, nomeDoProjeto);
             ps.setString(2, descricaoDoProjeto);
-            ps.setInt(3, idUsuario);
+            ps.setString(3, proprietario);
 
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

@@ -70,7 +70,7 @@ public class ProjetoListarRequisitosFrame extends JFrame {
 
 
     private DefaultTableModel criarTituloDasColunasDaTabela() {
-        Object[] columns = {"ID", "Título", "Módulo", "Funcionalidades", "Data de Criação", "Data da Última Alteração", "Versão", "Prioridade", "Complexidade", "Esforço em Horas", "Estado", "Fase", "Descrição", "ID Projeto", "Autor", "Autor da Última Modificação"};
+        Object[] columns = {"Título", "Módulo", "Funcionalidades", "Data de Criação", "Data da Última Alteração", "Versão", "Prioridade", "Complexidade", "Esforço em Horas", "Estado", "Fase", "Descrição", "ID Projeto", "Autor", "Autor da Última Modificação"};
         return new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -97,7 +97,7 @@ public class ProjetoListarRequisitosFrame extends JFrame {
 
         if (requisitos != null) {
             for (Requisito requisito : requisitos) {
-                Object[] row1 = {requisito.getId(), requisito.getNome(), requisito.getModulo(), requisito.getFuncionalidades(), requisito.getDataCriacao(), requisito.getDataUltimaAlteracao(), requisito.getVersao(), requisito.getPrioridade(), requisito.getComplexidade(), requisito.getEsforcoHoras(), requisito.getEstado(), requisito.getFase(), requisito.getDescricao(), requisito.getIdProjeto(), requisito.getIdAutor(), requisito.getIdAutorUltimaAlteracao()};
+                Object[] row1 = {requisito.getNome(), requisito.getModulo(), requisito.getFuncionalidades(), requisito.getDataCriacao(), requisito.getDataUltimaAlteracao(), requisito.getVersao(), requisito.getPrioridade(), requisito.getComplexidade(), requisito.getEsforcoHoras(), requisito.getEstado(), requisito.getFase(), requisito.getDescricao(), requisito.getIdProjeto(), requisito.getAutor(), requisito.getAutorUltimaAlteracao()};
                 modeloTabela.insertRow(0, row1);
             }
         }

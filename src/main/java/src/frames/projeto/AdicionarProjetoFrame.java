@@ -159,7 +159,7 @@ public class AdicionarProjetoFrame extends JFrame {
         if (!validarCampos(nomeDoProjeto, descricaoDoProjeto, nomeUsuario)) return false;
 
         Usuario usuario = UsuarioHelper.pegar(nomeUsuario);
-        if (usuario != null) { ProjetoHelper.adicionar(nomeDoProjeto, descricaoDoProjeto, usuario.getId()); }
+        if (usuario != null) { ProjetoHelper.adicionar(nomeDoProjeto, descricaoDoProjeto, usuario.getNomeDeUsuario()); }
         return true;
     }
 

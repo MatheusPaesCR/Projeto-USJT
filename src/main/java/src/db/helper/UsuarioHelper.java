@@ -19,15 +19,13 @@ public class UsuarioHelper {
                 ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
 
-                int id = rs.getInt("idUsuario");
                 String nome = rs.getString("nome_completo");
                 String nomeUser = rs.getString("nome_de_usuario");
                 String email = rs.getString("email");
                 String senha = rs.getString("senha");
                 String telefone = rs.getString("telefone");
 
-
-                Usuario u = new Usuario(id, nome, nomeUser, email, senha, telefone);
+                Usuario u = new Usuario(nome, nomeUser, email, senha, telefone);
                 usuarios.add(u);
             }
             return usuarios;
@@ -107,14 +105,13 @@ public class UsuarioHelper {
 
             if (rs.next()) {
 
-                int id = rs.getInt("idUsuario");
                 String nome = rs.getString("nome_completo");
                 String nomeUser = rs.getString("nome_de_usuario");
                 String email = rs.getString("email");
                 String senha = rs.getString("senha");
                 String telefone = rs.getString("telefone");
 
-                return new Usuario(id, nome, nomeUser, email, senha, telefone);
+                return new Usuario(nome, nomeUser, email, senha, telefone);
             } else return null;
         } catch (Exception e) {
             e.printStackTrace();

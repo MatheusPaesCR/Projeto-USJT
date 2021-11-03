@@ -6,7 +6,6 @@ public class Projeto {
     private String descricao;
     private Usuario proprietario;
 
-
     public Projeto(String nome, String descricao, Usuario proprietario) {
         this.nome = nome;
         this.descricao = descricao;
