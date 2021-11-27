@@ -30,7 +30,7 @@ buildNumber.properties
 .checkstyle
 
 # gradle
-build/
+build/*
 
 # Secrets
 service-account.json
