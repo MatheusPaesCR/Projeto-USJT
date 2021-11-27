@@ -99,17 +99,10 @@ public class Requisito {
         return prioridade;
     }
 
-    public void setPrioridade(Prioridade prioridade) {
-        this.prioridade = prioridade;
-    }
-
     public Complexidade getComplexidade() {
         return complexidade;
     }
 
-    public void setComplexidade(Complexidade complexidade) {
-        this.complexidade = complexidade;
-    }
 
     public int getEsforcoHoras() {
         return esforcoHoras;
@@ -123,16 +116,8 @@ public class Requisito {
         return estado;
     }
 
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
     public Fase getFase() {
         return fase;
-    }
-
-    public void setFase(Fase fase) {
-        this.fase = fase;
     }
 
     public String getDescricao() {
@@ -167,6 +152,22 @@ public class Requisito {
         this.autorUltimaAlteracao = autorUltimaAlteracao;
     }
 
+    public void setPrioridade(Prioridade prioridade) {
+        this.prioridade = prioridade;
+    }
+
+    public void setComplexidade(Complexidade complexidade) {
+        this.complexidade = complexidade;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+    public void setFase(Fase fase) {
+        this.fase = fase;
+    }
+
     public enum Prioridade {
         URGENTE,
         ALTA,
@@ -194,5 +195,221 @@ public class Requisito {
         TESTES,
         DESENVOLVIMENTO,
         ANALISE
+    }
+
+    public static Prioridade getPrioridadeByIndex(int index) {
+        switch (index) {
+            case 4:
+                return Prioridade.URGENTE;
+            case 3:
+                return  Prioridade.ALTA;
+            case 2:
+                return Prioridade.MEDIA;
+            case 1:
+                return Prioridade.BAIXA;
+            default:
+                return Prioridade.SEM_PRIORIDADE;
+        }
+    }
+
+    public static int getPrioridadeIndex(Prioridade prioridade) {
+        switch (prioridade) {
+            case URGENTE:
+                return 4;
+            case ALTA:
+                return 3;
+            case MEDIA:
+                return 2;
+            case BAIXA:
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
+    public static String getPrioridadeText(Prioridade prioridade) {
+        switch (prioridade) {
+            case URGENTE:
+                return "Urgente";
+            case ALTA:
+                return "Alta";
+            case MEDIA:
+                return "Media";
+            case BAIXA:
+                return "Baixa";
+            default:
+                return "Sem prioridade";
+        }
+    }
+
+    public static String getPrioridadeTextByIndex(int index) {
+        switch (index) {
+            case 4:
+                return "Urgente";
+            case 3:
+                return "Alta";
+            case 2:
+                return "Media";
+            case 1:
+                return "Baixa";
+            default:
+                return "Sem prioridade";
+        }
+    }
+
+    public static String getComplexidadeText(Complexidade complexidade) {
+        switch (complexidade) {
+            case MUITO_ALTA:
+                return "Muito Alta";
+            case ALTA:
+                return "Alta";
+            case MEDIA:
+                return "Média";
+            case BAIXA:
+                return "Baixa";
+            default:
+                return "Muito Baixa";
+        }
+    }
+
+    public static String getComplexidadeTextByIndex(int index) {
+        switch (index) {
+            case 4:
+                return "Muito Alta";
+            case 3:
+                return "Alta";
+            case 2:
+                return "Média";
+            case 1:
+                return "Baixa";
+            default:
+                return "Muito Baixa";
+        }
+    }
+
+    public static Complexidade getComplexidadeByIndex(int index) {
+        switch (index) {
+            case 4:
+                return Complexidade.MUITO_ALTA;
+            case 3:
+                return Complexidade.ALTA;
+            case 2:
+                return Complexidade.MEDIA;
+            case 1:
+                return Complexidade.BAIXA;
+            default:
+                return Complexidade.MUITO_BAIXA;
+        }
+    }
+
+    public static int getComplexidadeIndex(Complexidade complexidade) {
+        switch (complexidade) {
+            case MUITO_ALTA:
+                return 4;
+            case ALTA:
+                return 3;
+            case MEDIA:
+                return 2;
+            case BAIXA:
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
+    public static String getEstadoText(Estado estado) {
+        switch (estado) {
+            case IMPLEMENTADO:
+                return "Implementado";
+            case EM_DESENVOLVIMENTO:
+                return "Em desenvolvimento";
+            default:
+                return "Não iniciado";
+        }
+    }
+
+    public static String getEstadoTextByIndex(int index) {
+        switch (index) {
+            case 2:
+                return "Implementado";
+            case 1:
+                return "Em desenvolvimento";
+            default:
+                return "Não iniciado";
+        }
+    }
+
+    public static int getEstadoIndex(Estado estado) {
+        switch (estado) {
+            case IMPLEMENTADO:
+                return 2;
+            case EM_DESENVOLVIMENTO:
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
+    public static Estado getEstadoByIndex(int index) {
+        switch (index) {
+            case 2:
+                return Estado.IMPLEMENTADO;
+            case 1:
+                return Estado.EM_DESENVOLVIMENTO;
+            default:
+                return Estado.NAO_INICIADO;
+        }
+    }
+
+    public static String getFaseText(Fase fase) {
+        switch (fase) {
+            case CONCLUIDO:
+                return "Concluído";
+            case DESENVOLVIMENTO:
+                return "Desenvolvimento";
+            case TESTES:
+                return "Testes";
+            default:
+                return "Análise";
+        }
+    }
+
+    public static String getFaseTextByIndex(int index) {
+        switch (index) {
+            case 3:
+                return "Concluído";
+            case 2:
+                return "Desenvolvimento";
+            case 1:
+                return "Testes";
+            default:
+                return "Análise";
+        }
+    }
+
+    public static int getFaseIndex(Fase fase) {
+        switch (fase) {
+            case CONCLUIDO:
+                return 3;
+            case DESENVOLVIMENTO:
+                return 2;
+            case TESTES:
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
+    public static Fase getFaseByIndex(int index) {
+        switch (index) {
+            case 3:
+                return Fase.CONCLUIDO;
+            case 2:
+                return Fase.DESENVOLVIMENTO;
+            case 1:
+                return Fase.TESTES;
+            default:
+                return Fase.ANALISE;
+        }
     }
 }

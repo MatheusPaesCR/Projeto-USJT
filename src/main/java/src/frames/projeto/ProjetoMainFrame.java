@@ -1,6 +1,7 @@
 package src.frames.projeto;
 
 import src.db.helper.ProjetoHelper;
+import src.frames.requisitos.ListarRequisitosFrame;
 import src.models.Projeto;
 
 import javax.swing.*;
@@ -74,7 +75,7 @@ public class ProjetoMainFrame extends JFrame {
 
         if (projetos != null) {
             for (Projeto projeto : projetos) {
-                Object[] row1 = {projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
+                Object[] row1 = {projeto.getRegistro(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
                 modeloDeTabela.insertRow(0, row1);
             }
         }
@@ -137,7 +138,7 @@ public class ProjetoMainFrame extends JFrame {
 
         if (projetos != null) {
             for (Projeto projeto : projetos) {
-                Object[] row1 = {projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
+                Object[] row1 = {projeto.getRegistro(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
                 modeloTabela.insertRow(0, row1);
             }
         }
@@ -166,7 +167,7 @@ public class ProjetoMainFrame extends JFrame {
             return;
         }
 
-        ProjetoListarRequisitosFrame.abrir(idProjeto);
+        ListarRequisitosFrame.abrir(idProjeto);
     }
 
     private void editarProjeto() {

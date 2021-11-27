@@ -69,7 +69,7 @@ public class AcessoFrame extends JFrame {
 
             Principal principal = new Principal();
             String user = userField.getText();
-            String senha = senhaField.getText();
+            String senha = new String(senhaField.getPassword());
 
             principal.criarDepartamento(user, senha);
         }

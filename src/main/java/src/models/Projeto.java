@@ -1,7 +1,7 @@
 package src.models;
 
 public class Projeto {
-    private int id;
+    private int registro;
     private String nome;
     private String descricao;
     private Usuario proprietario;
@@ -13,7 +13,7 @@ public class Projeto {
     }
 
     public Projeto(int registro, String nome, String descricao, Usuario proprietario) {
-        this.id = registro;
+        this.registro = registro;
         this.nome = nome;
         this.descricao = descricao;
         this.proprietario = proprietario;
@@ -43,11 +43,11 @@ public class Projeto {
         this.proprietario = proprietario;
     }
 
-    public int getId() {
-        return id;
+    public int getRegistro() {
+        return registro;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setRegistro(int registro) {
+        this.registro = registro;
     }
 }

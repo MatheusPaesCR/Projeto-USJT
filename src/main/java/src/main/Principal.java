@@ -1,30 +1,19 @@
 package src.main;
 
-import src.db.ConexaoBD;
+import src.db.helper.UsuarioHelper;
 import src.frames.AcessoFrame;
 import src.frames.DepartamentoFrame;
 import src.frames.EditarUsuario;
-import src.frames.projeto.ProjetoMainFrame;
 import src.models.Usuario;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 
 public class Principal {
-    //Atributos
-    private JTable table;
-    private TableModel model;
     public static AcessoFrame acessoFrame = null;
     public static EditarUsuario editarUsuario; //da tabela com filtro:
 
     public static void main(String[] args) {
-        //Inerface do acesso usuario e senha
         criarAcesso(0);
-        //interface da tela gerenciador do departamento é criada depois de fazer login e o login ser validado
-//        criarDepartamento();
     }
 
     //Inerface do acesso usuario e senha
@@ -68,48 +57,17 @@ public class Principal {
 
     //interface da tela gerenciador do departamento
     public static void criarDepartamento(String user, String senha) {
+        boolean usuarioValido = false;
 
-        int busca = 0;
-        int cont = 0;
-
-        Usuario usuario = new Usuario();
-        ArrayList<Usuario> usuarios = new ArrayList<>();
-        //try with resources
-        try (
-                PreparedStatement ps = ConexaoBD.getConnection().prepareStatement("SELECT nome_de_usuario, senha FROM Usuario;");
-                ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-
-
-                String nomeUser = rs.getString("nome_de_usuario");
-                String senhaUser = rs.getString("senha");
-
-
-                if (nomeUser.equalsIgnoreCase(user) && senhaUser.equalsIgnoreCase(senha)) {
-                    //Encontrou
-                    cont = 1;
-                } else {
-                    //Não encontrou no banco de dados
-
-                }
-
-
+        Usuario usuarioEncontrado = UsuarioHelper.pegar(user);
+        if (usuarioEncontrado != null) {
+            if (usuarioEncontrado.getNomeDeUsuario().equalsIgnoreCase(user) && usuarioEncontrado.getSenha().equalsIgnoreCase(senha)) {
+                LoginInfo.getInstancia().usuarioLogado = usuarioEncontrado;
+                usuarioValido = true;
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            //return null;
         }
 
-
-        if (cont == 1) {
-            busca = 1;
-        } else {
-            busca = -1;
-        }
-
-
-        if (busca == 1) {
+        if (usuarioValido) {
             //criando o objeto departamento frame
             DepartamentoFrame departamentoFrame = new DepartamentoFrame();
             //definindo o que acontece ao apertar x da janela

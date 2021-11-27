@@ -19,7 +19,7 @@ public class AdicionarProjetoFrame extends JFrame {
     private JTextField nomeProjetoField;
     private JTable tabelaDeUsuarios;
     private JButton btnCriar;
-    private CallbackAdicionarProjeto callback;
+    private CallbackAdicionar callback;
     private final GridBagConstraints c = new GridBagConstraints();
     private boolean isEditMode = false;
     private int idProjeto;
@@ -252,7 +252,7 @@ public class AdicionarProjetoFrame extends JFrame {
         adicionarProjetoFrame = null;
     }
 
-    public static void abrir(CallbackAdicionarProjeto callback) {
+    public static void abrir(CallbackAdicionar callback) {
         getInstance().callback = callback;
         getInstance().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getInstance().setSize(1080, 720);
@@ -260,7 +260,7 @@ public class AdicionarProjetoFrame extends JFrame {
         getInstance().setLocationRelativeTo(null);
     }
 
-    public static void abrirParaEdicao(int idProjeto, CallbackAdicionarProjeto callback) {
+    public static void abrirParaEdicao(int idProjeto, CallbackAdicionar callback) {
         getInstance().idProjeto = idProjeto;
         abrir(callback);
         getInstance().colocarEmModoDeEdicao();
