@@ -1,20 +1,22 @@
 package src.frames;
 
-import src.main.Principal;
+import src.db.helper.UsuarioHelper;
+import src.main.LoginInfo;
+import src.models.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AcessoFrame extends JFrame {
+public class LoginFrame extends JFrame {
     private JTextField userField;
     private JPasswordField senhaField;
 
     /**
      * Aqui o titulo da janela para acessar o sistema
      **/
-    public AcessoFrame() {
+    public LoginFrame() {
         super("Acesso ao sistema");
 
         acessarCadastro();
@@ -66,13 +68,28 @@ public class AcessoFrame extends JFrame {
 
     private class BotaoEntrarAction implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-
-            Principal principal = new Principal();
-            String user = userField.getText();
+            String usuario = userField.getText();
             String senha = new String(senhaField.getPassword());
 
-            principal.criarDepartamento(user, senha);
+            boolean usuarioValido = verificarUsuario(usuario, senha);
+
+            if (usuarioValido) {
+                MainFrame.abrir();
+                fechar();
+            }
+            else JOptionPane.showMessageDialog(null, "Usuário ou senha incorreto(s)!", "OPS!", JOptionPane.PLAIN_MESSAGE);
         }
+    }
+
+    private boolean verificarUsuario(String usuario, String senha) {
+        Usuario usuarioEncontrado = UsuarioHelper.pegar(usuario);
+        if (usuarioEncontrado != null) {
+            if (usuarioEncontrado.getNomeDeUsuario().equalsIgnoreCase(usuario) && usuarioEncontrado.getSenha().equalsIgnoreCase(senha)) {
+                LoginInfo.getInstancia().usuarioLogado = usuarioEncontrado;
+                return true;
+            }
+        }
+        return false;
     }
 
     private class BotaoLimparAction implements ActionListener {
@@ -81,5 +98,28 @@ public class AcessoFrame extends JFrame {
             userField.setText("");
             senhaField.setText("");
         }
+    }
+
+    /**
+     * Métodos para abrir a tela
+     */
+    private static LoginFrame loginFrame;
+
+    private static LoginFrame getInstance() {
+        if (loginFrame == null) {
+            loginFrame = new LoginFrame();
+        }
+        return loginFrame;
+    }
+
+    public static void fechar() {
+        if (loginFrame != null) loginFrame.setVisible(false);
+        loginFrame = null;
+    }
+    public static void abrir() {
+        getInstance().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getInstance().setSize(500, 300);
+        getInstance().setVisible(true);
+        getInstance().setLocationRelativeTo(null);
     }
 }

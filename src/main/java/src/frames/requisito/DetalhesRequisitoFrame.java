@@ -1,4 +1,4 @@
-package src.frames.requisitos;
+package src.frames.requisito;
 
 import src.db.helper.ProjetoHelper;
 import src.db.helper.RequisitoHelper;

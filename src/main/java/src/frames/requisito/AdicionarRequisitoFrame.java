@@ -1,8 +1,7 @@
-package src.frames.requisitos;
+package src.frames.requisito;
 
 import src.db.helper.RequisitoHelper;
-import src.frames.projeto.CallbackAdicionar;
-import src.models.Projeto;
+import src.frames.CallbackAdicionar;
 import src.models.Requisito;
 
 import javax.swing.*;

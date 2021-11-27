@@ -1,7 +1,7 @@
 package src.frames.projeto;
 
 import src.db.helper.ProjetoHelper;
-import src.frames.requisitos.ListarRequisitosFrame;
+import src.frames.requisito.ListarRequisitosFrame;
 import src.models.Projeto;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ProjetoMainFrame extends JFrame {
+public class ListarProjetosFrame extends JFrame {
     private JTable tabelaProjetos;
     private JButton btnAdicionar;
     private JButton btnEditar;
@@ -20,7 +20,7 @@ public class ProjetoMainFrame extends JFrame {
     private JPanel root;
     private final GridBagConstraints c = new GridBagConstraints();
 
-    public ProjetoMainFrame() {
+    public ListarProjetosFrame() {
         super("Dados dos Projetos");
         setLayout(new BorderLayout());
 
@@ -44,7 +44,7 @@ public class ProjetoMainFrame extends JFrame {
         criarTabela(modeloDeTabela);
 
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(10,20,0,20);
+        c.insets = new Insets(10, 20, 0, 20);
         c.ipady = 40;
         c.weightx = 0.0;
         c.gridwidth = 4;
@@ -61,7 +61,7 @@ public class ProjetoMainFrame extends JFrame {
 
     private DefaultTableModel criarTituloDasColunasDaTabela() {
         Object[] columns = {"ID", "Título", "Descrição", "Usuário Proprietário", "Email do Proprietário"};
-        return new DefaultTableModel(columns, 0){
+        return new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -71,11 +71,11 @@ public class ProjetoMainFrame extends JFrame {
     }
 
     private void criarTabela(DefaultTableModel modeloDeTabela) {
-        ArrayList<Projeto> projetos = Projeto.listar();
+        ArrayList<Projeto> projetos = ProjetoHelper.listar();
 
         if (projetos != null) {
             for (Projeto projeto : projetos) {
-                Object[] row1 = {projeto.getRegistro(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
+                Object[] row1 = {projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
                 modeloDeTabela.insertRow(0, row1);
             }
         }
@@ -134,11 +134,11 @@ public class ProjetoMainFrame extends JFrame {
         modeloTabela.getDataVector().removeAllElements();
         modeloTabela.fireTableDataChanged();
 
-        ArrayList<Projeto> projetos = Projeto.listar();
+        ArrayList<Projeto> projetos = ProjetoHelper.listar();
 
         if (projetos != null) {
             for (Projeto projeto : projetos) {
-                Object[] row1 = {projeto.getRegistro(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
+                Object[] row1 = { projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario(), projeto.getProprietario().getEmail()};
                 modeloTabela.insertRow(0, row1);
             }
         }
@@ -153,14 +153,14 @@ public class ProjetoMainFrame extends JFrame {
 
         int confirmado = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir esse projeto?", "Excluir", JOptionPane.YES_NO_OPTION);
 
-        if (confirmado == 0){
-            Projeto.apagar(idProjeto);
+        if (confirmado == 0) {
+            ProjetoHelper.apagar(idProjeto);
             atualizarTabela();
             JOptionPane.showMessageDialog(null, "Projeto excluído!!!");
         }
     }
 
-    private void mostrarRequisitos(){
+    private void mostrarRequisitos() {
         int idProjeto = pegarIdProjeto();
         if (idProjeto == -1) {
             JOptionPane.showMessageDialog(null, "Selecione um projeto primeiro");
@@ -180,10 +180,10 @@ public class ProjetoMainFrame extends JFrame {
         AdicionarProjetoFrame.abrirParaEdicao(idProjeto, this::atualizarTabela);
     }
 
-    private int pegarIdProjeto(){
+    private int pegarIdProjeto() {
         int column = 0;
         int row = tabelaProjetos.getSelectedRow();
-        if (row == -1){
+        if (row == -1) {
             return -1;
         } else {
             // Evita pegar a linha errada quando o usuário ordena a coluna
@@ -192,22 +192,21 @@ public class ProjetoMainFrame extends JFrame {
         }
     }
 
-
     /**
      * Métodos para abrir a tela
      */
-    private static ProjetoMainFrame projetoMainFrame;
+    private static ListarProjetosFrame listarProjetosFrame;
 
-    private static ProjetoMainFrame getInstance() {
-        if (projetoMainFrame == null) {
-            projetoMainFrame = new ProjetoMainFrame();
+    private static ListarProjetosFrame getInstance() {
+        if (listarProjetosFrame == null) {
+            listarProjetosFrame = new ListarProjetosFrame();
         }
-        return projetoMainFrame;
+        return listarProjetosFrame;
     }
 
     public static void fechar() {
-        getInstance().setVisible(false);
-        projetoMainFrame = null;
+        if (listarProjetosFrame != null) listarProjetosFrame.setVisible(false);
+        listarProjetosFrame = null;
     }
 
     public static void abrir() {
@@ -215,5 +214,11 @@ public class ProjetoMainFrame extends JFrame {
         getInstance().setSize(1080, 720);
         getInstance().setVisible(true);
         getInstance().setLocationRelativeTo(null);
+        getInstance().addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                fechar();
+            }
+        });
     }
 }

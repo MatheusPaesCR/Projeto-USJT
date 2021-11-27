@@ -92,7 +92,7 @@ public class ProjetoHelper {
             ps.setString(1, projeto.getNome());
             ps.setString(2, projeto.getDescricao());
             ps.setString(3, projeto.getProprietario().getNomeDeUsuario());
-            ps.setInt(4, projeto.getRegistro());
+            ps.setInt(4, projeto.getId());
 
             ps.execute();
         } catch (Exception e) {

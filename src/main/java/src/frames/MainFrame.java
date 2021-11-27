@@ -1,26 +1,26 @@
 package src.frames;
 
-import src.frames.projeto.ProjetoMainFrame;
-import src.frames.projeto.TabelaProjetos;
-import src.frames.projeto.TabelaRequisitos;
-import src.main.Principal;
+import com.sun.tools.javac.Main;
+import src.frames.projeto.ListarProjetosFrame;
+import src.frames.requisito.ListarRequisitosFrame;
+import src.frames.tabelas.TabelaProjetosFrame;
+import src.frames.tabelas.TabelaRequisitosFrame;
+import src.frames.tabelas.TabelaUsuariosFrame;
+import src.frames.usuario.ListarUsuarioFrame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DepartamentoFrame extends JFrame {
-    //Criando construtor
-    public DepartamentoFrame() {       //aqui o titulo da janela "gerenciador do departamento"
+public class MainFrame extends JFrame {
+    public MainFrame() {
         super("GERENCIADOR DO DEPARTAMENTO");
-        criarMenu();//Chamando metodo criar menu pelo construtor
+        criarMenu();
     }
 
-    private void criarMenu()//private para só ser acessado por essa classe
-    {
+    private void criarMenu() {
         GerenciarUsuariosAction gerenciarUsuariosAction = new GerenciarUsuariosAction(); //criando um objeto para executar as ações dos JComboBox's
         GerenciarProjetosAction gerenciarProjetosAction = new GerenciarProjetosAction();
-        GerenciarRequisitosAction gerenciarRequisitosAction = new GerenciarRequisitosAction();
         ExibirUsuaiosAction exibirUsuaiosAction = new ExibirUsuaiosAction();
         ExibirProjetosAction exibirProjetosAction = new ExibirProjetosAction();
         ExibirRequisitosAction exibirRequisitosAction = new ExibirRequisitosAction();
@@ -34,10 +34,6 @@ public class DepartamentoFrame extends JFrame {
         JMenuItem comboBoxExcluir = new JMenuItem("Projetos");
         comboBoxExcluir.addActionListener(gerenciarProjetosAction);//Ação
         comboBox.add(comboBoxExcluir);
-        JMenuItem comboBoxAlterar = new JMenuItem("Requisitos");
-        comboBoxAlterar.addActionListener(gerenciarRequisitosAction);///Ação
-        comboBox.add(comboBoxAlterar);
-
 
         JMenu exibir = new JMenu("Exibir");//Criando outra opção e itens para a barra de menu
 
@@ -59,47 +55,53 @@ public class DepartamentoFrame extends JFrame {
 
     //Classes que criam Objetos que executam as ações do itensMenus
 
-    //Editar
-    private class GerenciarUsuariosAction implements ActionListener {
+    private static class GerenciarUsuariosAction implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            Principal principal = new Principal();
-            principal.adicionarUsuario(0);
-
+            ListarUsuarioFrame.abrir();
         }
     }
 
-    private class GerenciarProjetosAction implements ActionListener {
+    private static class GerenciarProjetosAction implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            ProjetoMainFrame.abrir();
+            ListarProjetosFrame.abrir();
         }
     }
 
-    private class GerenciarRequisitosAction implements ActionListener {
+    private static class ExibirUsuaiosAction implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            JOptionPane.showMessageDialog(null, "Alterar");
+            new TabelaUsuariosFrame();
         }
     }
 
-    //Exibir
-    private class ExibirUsuaiosAction implements ActionListener {
+    private static class ExibirProjetosAction implements ActionListener {
         public void actionPerformed(ActionEvent event) {
 
-            new TabelaComFiltro();
+            new TabelaProjetosFrame();
         }
     }
 
-    private class ExibirProjetosAction implements ActionListener {
+    private static class ExibirRequisitosAction implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-
-            new TabelaProjetos();
+            new TabelaRequisitosFrame();
         }
     }
 
-    private class ExibirRequisitosAction implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
+    /**
+     * Métodos para abrir a tela
+     */
+    private static MainFrame mainFrame;
 
-            new TabelaRequisitos();
-
+    private static MainFrame getInstance() {
+        if (mainFrame == null) {
+            mainFrame = new MainFrame();
         }
+        return mainFrame;
+    }
+
+    public static void abrir() {
+        getInstance().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getInstance().setSize(1280, 720);
+        getInstance().setVisible(true);
+        getInstance().setLocationRelativeTo(null);
     }
 }

@@ -1,5 +1,8 @@
 package src.frames.projeto;
 
+import src.db.helper.ProjetoHelper;
+import src.db.helper.UsuarioHelper;
+import src.frames.CallbackAdicionar;
 import src.models.Projeto;
 import src.models.Usuario;
 
@@ -106,7 +109,7 @@ public class AdicionarProjetoFrame extends JFrame {
     }
 
     private void criarTabela(DefaultTableModel modeloDeTabela) {
-        ArrayList<Usuario> usuarios = Usuario.listar();
+        ArrayList<Usuario> usuarios = UsuarioHelper.listar();
 
         if (usuarios != null) {
             for (Usuario usuario : usuarios) {
@@ -156,8 +159,8 @@ public class AdicionarProjetoFrame extends JFrame {
 
         if (!validarCampos(nomeDoProjeto, descricaoDoProjeto, nomeUsuario)) return false;
 
-        Usuario usuario = Usuario.pegar(nomeUsuario);
-        if (usuario != null) { Projeto.adicionar(nomeDoProjeto, descricaoDoProjeto, usuario.getNomeDeUsuario()); }
+        Usuario usuario = UsuarioHelper.pegar(nomeUsuario);
+        if (usuario != null) { ProjetoHelper.adicionar(nomeDoProjeto, descricaoDoProjeto, usuario.getNomeDeUsuario()); }
         return true;
     }
 
@@ -168,14 +171,14 @@ public class AdicionarProjetoFrame extends JFrame {
 
         if (!validarCampos(nomeDoProjeto, descricaoDoProjeto, nomeUsuario)) return false;
 
-        Usuario usuario = Usuario.pegar(nomeUsuario);
+        Usuario usuario = UsuarioHelper.pegar(nomeUsuario);
 
-        Projeto projeto = Projeto.pegar(idProjeto);
+        Projeto projeto = ProjetoHelper.pegar(idProjeto);
         projeto.setNome(nomeDoProjeto);
         projeto.setDescricao(descricaoDoProjeto);
         projeto.setProprietario(usuario);
 
-        if (usuario != null) { Projeto.atualizar(projeto); }
+        if (usuario != null) { ProjetoHelper.atualizar(projeto); }
         return true;
     }
 
@@ -211,7 +214,7 @@ public class AdicionarProjetoFrame extends JFrame {
     }
 
     private void popularFormulario() {
-        Projeto projeto = Projeto.pegar(idProjeto);
+        Projeto projeto = ProjetoHelper.pegar(idProjeto);
         if (projeto != null) {
             nomeProjetoField.setText(projeto.getNome());
             descricaoProjetoField.setText(projeto.getDescricao());

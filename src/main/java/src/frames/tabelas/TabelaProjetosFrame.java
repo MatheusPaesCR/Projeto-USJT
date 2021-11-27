@@ -1,6 +1,7 @@
-package src.frames;
+package src.frames.tabelas;
 
-import src.models.Usuario;
+import src.db.helper.ProjetoHelper;
+import src.models.Projeto;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,35 +13,26 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
-
-public class TabelaComFiltro extends JFrame {
+public class TabelaProjetosFrame extends JFrame {
     private JTable table;
     private JTable nomes;
     private TableModel model;
     private DefaultTableModel nomesModel;
 
-    public TabelaComFiltro() {
-        setTitle("Dados dos usuários");
-        Object columns[] = {"Nome Completo", "Login", "Senha", "Email" ,"Número do celular"};  ///titulo das colunas
-        nomesModel = new DefaultTableModel(columns, 6);
+    public TabelaProjetosFrame() {
+        setTitle("Dados dos Projetos");
+        Object[] columns = {"Registro do projeto", "Nome do projeto", "Descrição", "Usuário proprietário"};  ///titulo das colunas
+        nomesModel = new DefaultTableModel(columns, 0);
         nomes = new JTable(nomesModel);
 
+        ArrayList<Projeto> projetos = ProjetoHelper.listar();
 
-        String dados = "";
-        String dados2 = "";
-        Usuario usuario = new Usuario();
-        Usuario auxiliar = new Usuario();
-        ArrayList<Usuario> lista = Usuario.listar();
+        if (projetos == null) return;
 
-
-        for (int i = 0; i < lista.size(); i++) {
-            usuario = lista.get(i);
-
-            Object[] row1 = {usuario.getNomeCompleto(),  usuario.getNomeDeUsuario(), usuario.getSenha(),usuario.getEmail(), usuario.getTelefone()};
+        for (Projeto projeto : projetos) {
+            Object[] row1 = {projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario()};
             nomesModel.insertRow(0, row1);
-
         }
-
 
         table = new JTable(nomesModel); //JTable
         final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(nomesModel);
@@ -79,33 +71,22 @@ public class TabelaComFiltro extends JFrame {
             }
         });
 
-        buttonVoltar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-            }
-        });
+        buttonVoltar.addActionListener(e -> setVisible(false));
 
-        buttonAtualizar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        buttonAtualizar.addActionListener(e -> {
 
-                ///Limpando a tabela
-                DefaultTableModel dm = (DefaultTableModel) table.getModel();
-                dm.getDataVector().removeAllElements();
-                dm.fireTableDataChanged();
+            ///Limpando a tabela
+            DefaultTableModel dm = (DefaultTableModel) table.getModel();
+            dm.getDataVector().removeAllElements();
+            dm.fireTableDataChanged();
 
-                //Aqui parei de limpar
-                String dados = "";
-                String dados2 = "";
-                Usuario usuario = new Usuario();
-                ArrayList<Usuario> lista = Usuario.listar();
+            ArrayList<Projeto> novosProjetos = ProjetoHelper.listar();
 
+            if (novosProjetos == null) return;
 
-                for (int i = 0; i < lista.size(); i++) {
-                    usuario = lista.get(i);
-
-                    Object[] row1 = {usuario.getNomeCompleto(),  usuario.getNomeDeUsuario(), usuario.getSenha(),usuario.getEmail(), usuario.getTelefone()};
-                    nomesModel.insertRow(0, row1);
-                }
+            for (Projeto projeto : novosProjetos) {
+                Object[] row1 = {projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getProprietario().getNomeDeUsuario()};
+                nomesModel.insertRow(0, row1);
             }
         });
 
@@ -115,7 +96,7 @@ public class TabelaComFiltro extends JFrame {
         add(painelBotoes, BorderLayout.SOUTH);
 
         setSize(800, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
     }

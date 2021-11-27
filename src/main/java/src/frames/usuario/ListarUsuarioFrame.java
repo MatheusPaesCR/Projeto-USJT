@@ -1,5 +1,7 @@
-package src.frames;
+package src.frames.usuario;
 
+import src.db.helper.UsuarioHelper;
+import src.frames.requisito.ListarRequisitosFrame;
 import src.main.Principal;
 import src.models.Usuario;
 
@@ -13,7 +15,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
-public class EditarUsuario extends JFrame {     //Painel do usuario
+public class ListarUsuarioFrame extends JFrame {     //Painel do usuario
     private JTextField nomeDeUsuarioField;
     private JTextField nomeCompletoField;
     private JTextField emailField;
@@ -36,7 +38,7 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
     private JTextField nomeCompletoAExcluir;
 
 
-    public EditarUsuario() { //aqui o titulo da janela para acessar o sistema
+    public ListarUsuarioFrame() { //aqui o titulo da janela para acessar o sistema
         super("Editar Usuario");
         acessarUsuario();
     }
@@ -183,7 +185,7 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
         String dados = "";
         String dados2 = "";
         Usuario usuario = new Usuario();
-        ArrayList<Usuario> lista = Usuario.listar();
+        ArrayList<Usuario> lista = UsuarioHelper.listar();
 
         for (int i = 0; i < lista.size(); i++) {
             usuario = lista.get(i);
@@ -235,35 +237,26 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
         });
         //botao voltar da tabela
 
-        buttonVoltar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-            }
-        });
+        buttonVoltar.addActionListener(e -> setVisible(false));
         //botao atualizar tabela
-        buttonAtualizar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        buttonAtualizar.addActionListener(e -> {
 
-                ///Limpando a tabela
-                DefaultTableModel dm = (DefaultTableModel) table.getModel();
-                dm.getDataVector().removeAllElements();
-                dm.fireTableDataChanged();
+            ///Limpando a tabela
+            DefaultTableModel dm = (DefaultTableModel) table.getModel();
+            dm.getDataVector().removeAllElements();
+            dm.fireTableDataChanged();
 
-                //Aqui parei de limpar
-                String dados = "";
-                String dados2 = "";
-                Usuario usuario = new Usuario();
-                Usuario auxiliar = new Usuario();
-                ArrayList<Usuario> lista = Usuario.listar();
+            //Aqui parei de limpar
+            Usuario usuario1 = new Usuario();
+            ArrayList<Usuario> lista1 = UsuarioHelper.listar();
 
 
-                for (int i = 0; i < lista.size(); i++) {
-                    usuario = lista.get(i);
+            for (int i = 0; i < lista1.size(); i++) {
+                usuario1 = lista1.get(i);
 
-                    Object[] row1 = {usuario.getNomeCompleto(), usuario.getEmail(), usuario.getNomeDeUsuario(), usuario.getSenha(), usuario.getTelefone()};
-                    nomesModel.insertRow(0, row1);
+                Object[] row1 = {usuario1.getNomeCompleto(), usuario1.getEmail(), usuario1.getNomeDeUsuario(), usuario1.getSenha(), usuario1.getTelefone()};
+                nomesModel.insertRow(0, row1);
 
-                }
             }
         });
 
@@ -314,34 +307,29 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
     }
 
     ///botao salvar para adicionar usuarios
-    private class BotaoSalvarAction implements ActionListener
-    {
-        public void actionPerformed(ActionEvent event)
-        {
+    private class BotaoSalvarAction implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
             String nomeDeUsuario = nomeDeUsuarioField.getText();
             String nomeCompleto = nomeCompletoField.getText();
             String email = emailField.getText();
             String senha = senhaField.getText();
             String confirmarSenha = confirmarSenhaField.getText();
             String telefone = telefoneField.getText();
-            int x=13;
+            int x = 13;
 
 
             //Verifica se o user já existe:
 
-            Usuario existe = new Usuario();
-            String validar=  existe.verificar(nomeDeUsuario);
+            String usuarioValido = UsuarioHelper.verificar(nomeDeUsuario);
+            if (usuarioValido == null) return;
 
-            if(validar.equalsIgnoreCase(nomeDeUsuario))
-            {
-                JOptionPane.showMessageDialog(null, "O usuário "+nomeDeUsuario+" já existe!", "Erro", JOptionPane.PLAIN_MESSAGE);
-                x=0;
+            if (usuarioValido.equalsIgnoreCase(nomeDeUsuario)) {
+                JOptionPane.showMessageDialog(null, "O usuário " + nomeDeUsuario + " já existe!", "Erro", JOptionPane.PLAIN_MESSAGE);
+                x = 0;
             }
-            if(x==13)
-            {
+            if (x == 13) {
 
-                if (senha.equalsIgnoreCase(confirmarSenha))
-                {
+                if (senha.equalsIgnoreCase(confirmarSenha)) {
 
                     //adicionar no banco
                     Usuario adicionarUser = new Usuario();
@@ -351,25 +339,12 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
                     adicionarUser.setEmail(email);
                     adicionarUser.setSenha(senha);
                     adicionarUser.setTelefone(telefone);
-                    Usuario.adicionarUsuario(adicionarUser);
+                    UsuarioHelper.adicionarUsuario(adicionarUser);
 
-
-
-
-
-
-                }
-                else
-                {
+                } else {
                     JOptionPane.showMessageDialog(null, "As senhas não correspondem!", "Erro", JOptionPane.PLAIN_MESSAGE);
                 }
             }
-
-
-
-
-
-
 
 
         }
@@ -390,10 +365,9 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
     }
 
     //botao pra fechar a janela de editar usuario
-    private class BotaoFecharAction implements ActionListener {
+    private static class BotaoFecharAction implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            Principal p = new Principal();
-            p.fecharUsuario();
+            fechar();
         }
     }
 
@@ -408,7 +382,7 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
 
 
             usuario.setNomeCompleto(oNomeDoExcluido);
-            Usuario.apagar(usuario.getNomeCompleto());
+            UsuarioHelper.apagar(usuario.getNomeCompleto());
 
             //Botão para excluir user
         }
@@ -440,13 +414,42 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
                 atualizarConfirmarSenhaField.setText("");
                 atualizarTelefoneField.setText("");
 
-                Usuario.atualizar(us);
+                UsuarioHelper.atualizar(us);
 
-                //adicionar no banco
             } else {
                 JOptionPane.showMessageDialog(null, "As senhas não correspondem!", "Erro", JOptionPane.PLAIN_MESSAGE);
             }
         }
     }
 
+    /**
+     * Métodos para abrir a tela
+     */
+    private static ListarUsuarioFrame listarUsuarioFrame;
+
+    private static ListarUsuarioFrame getInstance() {
+        if (listarUsuarioFrame == null) {
+            listarUsuarioFrame = new ListarUsuarioFrame();
+        }
+        return listarUsuarioFrame;
+    }
+
+    private static void fechar() {
+        if (listarUsuarioFrame != null) getInstance().setVisible(false);
+        listarUsuarioFrame = null;
+    }
+
+    public static void abrir() {
+        getInstance().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        getInstance().setSize(1080, 720);
+        getInstance().setVisible(true);
+        getInstance().setLocationRelativeTo(null);
+
+        getInstance().addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                fechar();
+            }
+        });
+    }
 }

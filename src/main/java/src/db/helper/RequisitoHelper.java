@@ -47,6 +47,41 @@ public class RequisitoHelper {
         }
     }
 
+    public static ArrayList<Requisito> listar() {
+        ArrayList<Requisito> requisitos = new ArrayList<>();
+        String sql = "SELECT * FROM REQUISITO ";
+
+        try (Connection c = ConexaoBD.getConnection()) {
+            PreparedStatement ps = c.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int idRequisito = rs.getInt("idRequisito");
+                String nome = rs.getString("nome");
+                int modulo = rs.getInt("modulo");
+                String funcionalidades = rs.getString("funcionalidades");
+                Date data_de_criacao = rs.getDate("data_de_criacao");
+                Date data_da_ultima_alteracao = rs.getDate("data_da_ultima_alteracao");
+                int versao = rs.getInt("versao");
+                int idProjeto = rs.getInt("idProjeto");
+                Requisito.Prioridade prioridade = Requisito.Prioridade.valueOf(rs.getString("prioridade"));
+                Requisito.Complexidade complexidade = Requisito.Complexidade.valueOf(rs.getString("complexidade"));
+                int esforco_horas = rs.getInt("esforco_horas");
+                Requisito.Estado estado = Requisito.Estado.valueOf(rs.getString("estado"));
+                Requisito.Fase fase = Requisito.Fase.valueOf(rs.getString("fase"));
+                String descricao = rs.getString("descricao");
+                String autor = rs.getString("autor");
+                String autorUltimaModificacao = rs.getString("autorUltimaModificacao");
+
+                requisitos.add(new Requisito(idRequisito, nome, modulo, funcionalidades, data_de_criacao, data_da_ultima_alteracao, versao, prioridade, complexidade, esforco_horas, estado, fase, descricao, idProjeto, autor, autorUltimaModificacao));
+            }
+            return requisitos;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static Requisito pegar(int idRequisito) {
         String sql = "SELECT * FROM REQUISITO WHERE idRequisito = ? ";
 

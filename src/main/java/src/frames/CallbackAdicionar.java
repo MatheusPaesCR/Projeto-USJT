@@ -1,4 +1,4 @@
-package src.frames.projeto;
+package src.frames;
 
 public interface CallbackAdicionar {
     void invoke();
