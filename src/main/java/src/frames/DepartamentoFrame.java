@@ -1,6 +1,8 @@
 package src.frames;
 
 import src.frames.projeto.ProjetoMainFrame;
+import src.frames.projeto.TabelaProjetos;
+import src.frames.projeto.TabelaRequisitos;
 import src.main.Principal;
 
 import javax.swing.*;
@@ -46,7 +48,7 @@ public class DepartamentoFrame extends JFrame {
         exibirProjetos.addActionListener(exibirProjetosAction);//Ação
         exibir.add(exibirProjetos);
         JMenuItem exibirRequisitos = new JMenuItem("Requisitos");
-        exibirProjetos.addActionListener(exibirRequisitosAction);//Ação
+        exibirRequisitos.addActionListener(exibirRequisitosAction);//Ação
         exibir.add(exibirRequisitos);
         //Criando barra que abriga todos os itens acima:
         JMenuBar barra = new JMenuBar();
@@ -88,13 +90,16 @@ public class DepartamentoFrame extends JFrame {
 
     private class ExibirProjetosAction implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            JOptionPane.showMessageDialog(null, "Exibir projetos");
+
+            new TabelaProjetos();
         }
     }
 
     private class ExibirRequisitosAction implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            JOptionPane.showMessageDialog(null, "Exibir Requisitos");
+
+            new TabelaRequisitos();
+
         }
     }
 }

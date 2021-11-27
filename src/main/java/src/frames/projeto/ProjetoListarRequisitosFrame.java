@@ -1,6 +1,5 @@
 package src.frames.projeto;
 
-import src.db.helper.RequisitoHelper;
 import src.models.Requisito;
 
 import javax.swing.*;
@@ -93,7 +92,7 @@ public class ProjetoListarRequisitosFrame extends JFrame {
         DefaultTableModel modeloTabela = ((DefaultTableModel) tabelaRequisitos.getModel());
         modeloTabela.getDataVector().removeAllElements();
         modeloTabela.fireTableDataChanged();
-        ArrayList<Requisito> requisitos = RequisitoHelper.listar(idProjeto);
+        ArrayList<Requisito> requisitos = Requisito.listar();
 
         if (requisitos != null) {
             for (Requisito requisito : requisitos) {

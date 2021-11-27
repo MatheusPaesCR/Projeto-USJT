@@ -1,6 +1,5 @@
 package src.frames;
 
-import src.db.helper.UsuarioHelper;
 import src.main.Principal;
 import src.models.Usuario;
 
@@ -184,7 +183,7 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
         String dados = "";
         String dados2 = "";
         Usuario usuario = new Usuario();
-        ArrayList<Usuario> lista = UsuarioHelper.listar();
+        ArrayList<Usuario> lista = Usuario.listar();
 
         for (int i = 0; i < lista.size(); i++) {
             usuario = lista.get(i);
@@ -255,7 +254,7 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
                 String dados2 = "";
                 Usuario usuario = new Usuario();
                 Usuario auxiliar = new Usuario();
-                ArrayList<Usuario> lista = UsuarioHelper.listar();
+                ArrayList<Usuario> lista = Usuario.listar();
 
 
                 for (int i = 0; i < lista.size(); i++) {
@@ -315,29 +314,64 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
     }
 
     ///botao salvar para adicionar usuarios
-    private class BotaoSalvarAction implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
+    private class BotaoSalvarAction implements ActionListener
+    {
+        public void actionPerformed(ActionEvent event)
+        {
             String nomeDeUsuario = nomeDeUsuarioField.getText();
             String nomeCompleto = nomeCompletoField.getText();
             String email = emailField.getText();
             String senha = senhaField.getText();
             String confirmarSenha = confirmarSenhaField.getText();
             String telefone = telefoneField.getText();
+            int x=13;
 
-            if (senha.equalsIgnoreCase(confirmarSenha)) {
-                //adicionar no banco
-                Usuario adicionarUser = new Usuario();
 
-                adicionarUser.setNomeCompleto(nomeCompleto);
-                adicionarUser.setNomeDeUsuario(nomeDeUsuario);
-                adicionarUser.setEmail(email);
-                adicionarUser.setSenha(senha);
-                adicionarUser.setTelefone(telefone);
+            //Verifica se o user já existe:
 
-                UsuarioHelper.adicionarUsuario(adicionarUser);
-            } else {
-                JOptionPane.showMessageDialog(null, "As senhas não correspondem!", "Erro", JOptionPane.PLAIN_MESSAGE);
+            Usuario existe = new Usuario();
+            String validar=  existe.verificar(nomeDeUsuario);
+
+            if(validar.equalsIgnoreCase(nomeDeUsuario))
+            {
+                JOptionPane.showMessageDialog(null, "O usuário "+nomeDeUsuario+" já existe!", "Erro", JOptionPane.PLAIN_MESSAGE);
+                x=0;
             }
+            if(x==13)
+            {
+
+                if (senha.equalsIgnoreCase(confirmarSenha))
+                {
+
+                    //adicionar no banco
+                    Usuario adicionarUser = new Usuario();
+
+                    adicionarUser.setNomeCompleto(nomeCompleto);
+                    adicionarUser.setNomeDeUsuario(nomeDeUsuario);
+                    adicionarUser.setEmail(email);
+                    adicionarUser.setSenha(senha);
+                    adicionarUser.setTelefone(telefone);
+                    Usuario.adicionarUsuario(adicionarUser);
+
+
+
+
+
+
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "As senhas não correspondem!", "Erro", JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+
+
+
+
+
+
+
+
         }
     }
 
@@ -374,7 +408,7 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
 
 
             usuario.setNomeCompleto(oNomeDoExcluido);
-            UsuarioHelper.apagar(usuario.getNomeCompleto());
+            Usuario.apagar(usuario.getNomeCompleto());
 
             //Botão para excluir user
         }
@@ -406,7 +440,7 @@ public class EditarUsuario extends JFrame {     //Painel do usuario
                 atualizarConfirmarSenhaField.setText("");
                 atualizarTelefoneField.setText("");
 
-                UsuarioHelper.atualizar(us);
+                Usuario.atualizar(us);
 
                 //adicionar no banco
             } else {
