@@ -33,7 +33,7 @@ public class AcessoFrame extends JFrame {
         JPanel painelLogin = new JPanel();
         painelLogin.setLayout(new FlowLayout());//Mudando o modo de se posicionar
 
-        JLabel userLabel = new JLabel("Usuário:");
+        JLabel userLabel = new JLabel("Usuários:");
         userField = new JTextField(40);//40 é o tamanho da digitação
 
         JLabel senhaLabel = new JLabel("Senha:");

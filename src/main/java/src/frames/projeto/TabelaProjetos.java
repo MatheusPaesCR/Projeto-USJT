@@ -1,6 +1,6 @@
-package src.frames;
+package src.frames.projeto;
 
-import src.models.Usuario;
+import src.models.Projeto;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,34 +12,41 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
-
-public class TabelaComFiltro extends JFrame {
+public class TabelaProjetos extends JFrame {
     private JTable table;
     private JTable nomes;
     private TableModel model;
     private DefaultTableModel nomesModel;
 
-    public TabelaComFiltro() {
-        setTitle("Dados dos usuários");
-        Object columns[] = {"Nome Completo", "Login", "Senha", "Email" ,"Número do celular"};  ///titulo das colunas
-        nomesModel = new DefaultTableModel(columns, 6);
-        nomes = new JTable(nomesModel);
+    public  TabelaProjetos()
+    {
+        setTitle("Dados dos Projetos");
+        Object columns[] = {"Registro do projeto","Nome do projeto","Descrição","Usuário proprietário"};  ///titulo das colunas
+        nomesModel=new DefaultTableModel(columns,4);
+        nomes=new JTable (nomesModel);
 
 
-        String dados = "";
-        String dados2 = "";
-        Usuario usuario = new Usuario();
-        Usuario auxiliar = new Usuario();
-        ArrayList<Usuario> lista = Usuario.listar();
+        String dados="";
+        String dados2="";
 
 
-        for (int i = 0; i < lista.size(); i++) {
-            usuario = lista.get(i);
+        Projeto projeto=new Projeto();
+        Projeto auxiliar=new Projeto();
+        ArrayList<Projeto> lista = projeto.listar();
 
-            Object[] row1 = {usuario.getNomeCompleto(),  usuario.getNomeDeUsuario(), usuario.getSenha(),usuario.getEmail(), usuario.getTelefone()};
-            nomesModel.insertRow(0, row1);
+
+        for(int i = 0; i < lista.size(); i++)
+        {
+            projeto = lista.get(i);
+
+            Object[] row1={projeto.getId(),projeto.getNome(),projeto.getDescricao(),projeto.getProprietario().getNomeDeUsuario()};
+            nomesModel.insertRow(0,row1);
 
         }
+
+
+
+
 
 
         table = new JTable(nomesModel); //JTable
@@ -56,7 +63,7 @@ public class TabelaComFiltro extends JFrame {
         panel.add(filterText, BorderLayout.CENTER);
         add(panel, BorderLayout.NORTH);
         ///---------------------Botões
-        JPanel painelBotoes = new JPanel();  //criando o painel para os botoes
+        JPanel painelBotoes=new JPanel();  //criando o painel para os botoes
         painelBotoes.setLayout(new FlowLayout());
 
         JButton buttonVoltar = new JButton("Voltar");
@@ -64,59 +71,79 @@ public class TabelaComFiltro extends JFrame {
         JButton buttonAtualizar = new JButton("Atualizar");
 
         //Adicionando ação para o botão filtrar
-        buttonFiltrar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        buttonFiltrar.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
                 String text = filterText.getText();
-                if (text.length() == 0) {
+                if(text.length() == 0)
+                {
                     sorter.setRowFilter(null);
-                } else {
+                }
+                else {
                     try {
                         sorter.setRowFilter(RowFilter.regexFilter(text));
-                    } catch (PatternSyntaxException pse) {
+                    } catch(PatternSyntaxException pse) {
                         System.out.println("Bad regex pattern");
                     }
                 }
             }
         });
 
-        buttonVoltar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        buttonVoltar.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
                 setVisible(false);
             }
         });
 
-        buttonAtualizar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        buttonAtualizar.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
 
                 ///Limpando a tabela
-                DefaultTableModel dm = (DefaultTableModel) table.getModel();
+                DefaultTableModel dm = (DefaultTableModel)table.getModel();
                 dm.getDataVector().removeAllElements();
                 dm.fireTableDataChanged();
 
                 //Aqui parei de limpar
-                String dados = "";
-                String dados2 = "";
-                Usuario usuario = new Usuario();
-                ArrayList<Usuario> lista = Usuario.listar();
 
 
-                for (int i = 0; i < lista.size(); i++) {
-                    usuario = lista.get(i);
+                String dados="";
+                String dados2="";
+                Projeto projeto=new Projeto();
+                Projeto auxiliar=new Projeto();
+                ArrayList<Projeto> lista = projeto.listar();
 
-                    Object[] row1 = {usuario.getNomeCompleto(),  usuario.getNomeDeUsuario(), usuario.getSenha(),usuario.getEmail(), usuario.getTelefone()};
-                    nomesModel.insertRow(0, row1);
+
+                for(int i = 0; i < lista.size(); i++)
+                {
+                    projeto = lista.get(i);
+
+                    Object[] row1={projeto.getId(),projeto.getNome(),projeto.getDescricao(),projeto.getProprietario().getNomeDeUsuario()};
+                    nomesModel.insertRow(0,row1);
+
                 }
             }
         });
 
+
+
         painelBotoes.add(buttonFiltrar);
         painelBotoes.add(buttonAtualizar);
         painelBotoes.add(buttonVoltar);
-        add(painelBotoes, BorderLayout.SOUTH);
+        add(painelBotoes,BorderLayout.SOUTH);
 
         setSize(800, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+
+
+
+
     }
+
 }

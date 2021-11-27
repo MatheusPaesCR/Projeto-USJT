@@ -1,7 +1,6 @@
-package src.frames;
-
-import src.models.Usuario;
-
+package src.frames.projeto;
+import src.models.Projeto;
+import src.models.Requisito;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -12,31 +11,34 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
+public class TabelaRequisitos extends  JFrame{
 
-public class TabelaComFiltro extends JFrame {
     private JTable table;
     private JTable nomes;
     private TableModel model;
     private DefaultTableModel nomesModel;
 
-    public TabelaComFiltro() {
-        setTitle("Dados dos usuários");
-        Object columns[] = {"Nome Completo", "Login", "Senha", "Email" ,"Número do celular"};  ///titulo das colunas
-        nomesModel = new DefaultTableModel(columns, 6);
+    public TabelaRequisitos()
+    {
+        setTitle("Dados dos Requisitos");
+        Object columns[] = {"Nome", "Modulo", "Funcionalidades", "Data de criação","Autor","Ultima alteração","Autor da alteração","Versão","prioridade","complexidade","Esforço em horas","Estado","Fase","Descrição"};  ///titulo das colunas
+        nomesModel = new DefaultTableModel(columns, 15);
         nomes = new JTable(nomesModel);
 
 
         String dados = "";
         String dados2 = "";
-        Usuario usuario = new Usuario();
-        Usuario auxiliar = new Usuario();
-        ArrayList<Usuario> lista = Usuario.listar();
+
+
+        Requisito requisito = new Requisito();
+        Requisito auxiliar = new Requisito();
+        ArrayList<Requisito> lista = requisito.listar();
 
 
         for (int i = 0; i < lista.size(); i++) {
-            usuario = lista.get(i);
+            requisito = lista.get(i);
 
-            Object[] row1 = {usuario.getNomeCompleto(),  usuario.getNomeDeUsuario(), usuario.getSenha(),usuario.getEmail(), usuario.getTelefone()};
+            Object[] row1 = {requisito.getNome(),requisito.getModulo(),requisito.getFuncionalidades(),requisito.getDataCriacao(),requisito.getAutor(),requisito.getDataUltimaAlteracao(),requisito.getAutorUltimaAlteracao(),requisito.getVersao(),requisito.getPrioridade(),requisito.getComplexidade(),requisito.getEsforcoHoras(),requisito.getEstado(),requisito.getFase(),requisito.getDescricao()};
             nomesModel.insertRow(0, row1);
 
         }
@@ -94,29 +96,37 @@ public class TabelaComFiltro extends JFrame {
                 dm.fireTableDataChanged();
 
                 //Aqui parei de limpar
+
+
                 String dados = "";
                 String dados2 = "";
-                Usuario usuario = new Usuario();
-                ArrayList<Usuario> lista = Usuario.listar();
+
+                Requisito requisito = new Requisito();
+                Requisito auxiliar = new Requisito();
+                ArrayList<Requisito> lista = requisito.listar();
 
 
                 for (int i = 0; i < lista.size(); i++) {
-                    usuario = lista.get(i);
+                    requisito = lista.get(i);
 
-                    Object[] row1 = {usuario.getNomeCompleto(),  usuario.getNomeDeUsuario(), usuario.getSenha(),usuario.getEmail(), usuario.getTelefone()};
+                    Object[] row1 = {requisito.getNome(),requisito.getModulo(),requisito.getFuncionalidades(),requisito.getDataCriacao(),requisito.getAutor(),requisito.getDataUltimaAlteracao(),requisito.getAutorUltimaAlteracao(),requisito.getVersao(),requisito.getPrioridade(),requisito.getComplexidade(),requisito.getEsforcoHoras(),requisito.getEstado(),requisito.getFase(),requisito.getDescricao()};
                     nomesModel.insertRow(0, row1);
+
                 }
             }
         });
+
 
         painelBotoes.add(buttonFiltrar);
         painelBotoes.add(buttonAtualizar);
         painelBotoes.add(buttonVoltar);
         add(painelBotoes, BorderLayout.SOUTH);
 
-        setSize(800, 400);
+        setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+
+
     }
 }
