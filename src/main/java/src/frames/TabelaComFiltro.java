@@ -1,6 +1,5 @@
 package src.frames;
 
-import src.db.helper.UsuarioHelper;
 import src.models.Usuario;
 
 import javax.swing.*;
@@ -22,7 +21,7 @@ public class TabelaComFiltro extends JFrame {
 
     public TabelaComFiltro() {
         setTitle("Dados dos usuários");
-        Object columns[] = {"Nome Completo", "Email", "Login", "Senha", "Número do celular"};  ///titulo das colunas
+        Object columns[] = {"Nome Completo", "Login", "Senha", "Email" ,"Número do celular"};  ///titulo das colunas
         nomesModel = new DefaultTableModel(columns, 6);
         nomes = new JTable(nomesModel);
 
@@ -31,13 +30,13 @@ public class TabelaComFiltro extends JFrame {
         String dados2 = "";
         Usuario usuario = new Usuario();
         Usuario auxiliar = new Usuario();
-        ArrayList<Usuario> lista = UsuarioHelper.listar();
+        ArrayList<Usuario> lista = Usuario.listar();
 
 
         for (int i = 0; i < lista.size(); i++) {
             usuario = lista.get(i);
 
-            Object[] row1 = {usuario.getNomeCompleto(), usuario.getEmail(), usuario.getNomeDeUsuario(), usuario.getSenha(), usuario.getTelefone()};
+            Object[] row1 = {usuario.getNomeCompleto(),  usuario.getNomeDeUsuario(), usuario.getSenha(),usuario.getEmail(), usuario.getTelefone()};
             nomesModel.insertRow(0, row1);
 
         }
@@ -98,13 +97,13 @@ public class TabelaComFiltro extends JFrame {
                 String dados = "";
                 String dados2 = "";
                 Usuario usuario = new Usuario();
-                ArrayList<Usuario> lista = UsuarioHelper.listar();
+                ArrayList<Usuario> lista = Usuario.listar();
 
 
                 for (int i = 0; i < lista.size(); i++) {
                     usuario = lista.get(i);
 
-                    Object[] row1 = {usuario.getNomeCompleto(), usuario.getEmail(), usuario.getNomeDeUsuario(), usuario.getSenha(), usuario.getTelefone()};
+                    Object[] row1 = {usuario.getNomeCompleto(),  usuario.getNomeDeUsuario(), usuario.getSenha(),usuario.getEmail(), usuario.getTelefone()};
                     nomesModel.insertRow(0, row1);
                 }
             }

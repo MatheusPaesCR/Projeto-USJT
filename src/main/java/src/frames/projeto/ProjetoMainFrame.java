@@ -1,6 +1,5 @@
 package src.frames.projeto;
 
-import src.db.helper.ProjetoHelper;
 import src.models.Projeto;
 
 import javax.swing.*;
@@ -70,7 +69,7 @@ public class ProjetoMainFrame extends JFrame {
     }
 
     private void criarTabela(DefaultTableModel modeloDeTabela) {
-        ArrayList<Projeto> projetos = ProjetoHelper.listar();
+        ArrayList<Projeto> projetos = Projeto.listar();
 
         if (projetos != null) {
             for (Projeto projeto : projetos) {
@@ -133,7 +132,7 @@ public class ProjetoMainFrame extends JFrame {
         modeloTabela.getDataVector().removeAllElements();
         modeloTabela.fireTableDataChanged();
 
-        ArrayList<Projeto> projetos = ProjetoHelper.listar();
+        ArrayList<Projeto> projetos = Projeto.listar();
 
         if (projetos != null) {
             for (Projeto projeto : projetos) {
@@ -153,7 +152,7 @@ public class ProjetoMainFrame extends JFrame {
         int confirmado = JOptionPane.showConfirmDialog(null, "Deseja realmente excluir esse projeto?", "Excluir", JOptionPane.YES_NO_OPTION);
 
         if (confirmado == 0){
-            ProjetoHelper.apagar(idProjeto);
+            Projeto.apagar(idProjeto);
             atualizarTabela();
             JOptionPane.showMessageDialog(null, "Projeto excluído!!!");
         }
